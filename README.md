@@ -92,3 +92,124 @@ graph TD
 ```
 
 ### 🔁 The 3-Way Code Flow
+
+
+---
+
+## 💻 Tech Stack
+
+| Layer | Technology | Version | Purpose |
+| :--- | :--- | :--- | :--- |
+| **Frontend Framework** | React | `19.0.1` | Concurrent rendering, modern hooks, responsive UI state. |
+| **Type System** | TypeScript | `7.0.2` | Strict interface contracts across frontend and backend models. |
+| **Build Tool** | Vite | `8.3.0` | Sub-second HMR, optimized static bundling. |
+| **Styling** | Tailwind CSS | `4.3.3` | Modern utility styling with dynamic theme variable injection. |
+| **Icons** | Lucide React | `0.546.0` | Lightweight SVG icons for dashboard navigation. |
+| **Audio / Speech** | Web Audio API | Native | Speech synthesis for parent read-aloud and tactile UI chimes. |
+| **Vector Engine** | Native SVG | Native | Zero-dependency, offline-ready score trend charts. |
+| **Backend Runtime** | Node.js (ESM) | `24.x` | Asynchronous, non-blocking REST API service. |
+| **Server Framework** | Express.js | `4.21.2` | Route orchestration and custom role-based middleware. |
+| **Database** | MongoDB Atlas | Cloud Cluster | Scalable document store for dynamic content and slide decks. |
+| **Object Modeling** | Mongoose | `9.11.4` | Strictly typed schemas, indexing, and relation population. |
+| **Authentication** | JWT (`jsonwebtoken`) | `9.0.3` | Stateless 7-day token sessions for low-bandwidth networks. |
+| **Security** | `bcryptjs` | `3.0.3` | Cryptographic salting (10 rounds) and password hashing. |
+
+---
+
+## 🚦 Getting Started
+
+### Prerequisites
+* [Node.js](https://nodejs.org/) (`v18+` or `v24+`)
+* [MongoDB Atlas](https://www.mongodb.com/atlas) cluster URL or a local MongoDB instance
+
+---
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/your-username/ruralconnect---adaptive-learning-platform.git
+cd ruralconnect---adaptive-learning-platform
+```
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Environment Configuration
+Create a `.env` file in the `server/` directory:
+```env
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/ruralconnect?retryWrites=true&w=majority
+JWT_SECRET=your_super_secret_jwt_key_here
+PORT=5000
+```
+
+### 4. Seed Initial Curriculum *(Optional)*
+Populate the database with pre-configured State Board lessons and quizzes:
+```bash
+npm run seed
+```
+
+### 5. Launch the Application
+Open two separate terminal windows:
+
+**Terminal 1 — Backend Server:**
+```bash
+npm run server
+# 🚀 API running on http://localhost:5000
+```
+
+**Terminal 2 — Frontend Client:**
+```bash
+npm run dev
+# ➜ Local: http://localhost:3000
+```
+
+---
+
+## 📡 REST API Reference
+
+All protected endpoints require an `Authorization: Bearer <TOKEN>` header.
+
+### 🔑 Authentication
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | Public | Register Student, Teacher, or Parent; auto-generates codes. |
+| `POST` | `/api/auth/login` | Public | Authenticate user credentials and return 7-day JWT. |
+| `GET` | `/api/auth/me` | Authenticated | Validate token and retrieve the active user profile. |
+
+### 👩‍🏫 Teacher Console
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/teacher/classes` | Teacher | List all classrooms assigned to the logged-in teacher. |
+| `GET` | `/api/teacher/students` | Teacher | Fetch enrolled students, activity counts, and streaks. |
+| `POST` | `/api/teacher/lessons` | Teacher | Publish study materials with slide decks and practicals. |
+| `POST` | `/api/teacher/quizzes` | Teacher | Publish chapter tests with multiple-choice questions. |
+| `PATCH`| `/api/teacher/attempts/:id/evaluate` | Teacher | Update marks and record feedback for student attempts. |
+| `POST` | `/api/teacher/notices` | Teacher | Broadcast notices to classroom students and parents. |
+
+### 👨‍👩‍👧 Parent Portal
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/parent/children` | Parent | List all children linked to the parent account. |
+| `POST` | `/api/parent/link` | Parent | Link child using 6-character `parentCode`. |
+| `GET` | `/api/parent/children/:id/report` | Parent | Retrieve child's completed activities, marks, and graph history. |
+
+### 🎒 Student Workbench
+| Method | Endpoint | Access | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/lessons` | Student | Fetch accessible lessons (built-in + teacher-assigned). |
+| `POST` | `/api/progress` | Student | Record slide progress and award completion XP. |
+| `POST` | `/api/quizzes/:id/attempt` | Student | Submit quiz answers, score, and update study streak. |
+| `POST` | `/api/student/join` | Student | Enroll into a classroom using a teacher's `classCode`. |
+
+---
+
+## 🔒 Security & Data Integrity
+
+* **Password Security:** Salted and hashed using `bcryptjs` with 10 salt rounds prior to persistence.
+* **Data Isolation:** Teachers can only inspect students enrolled in their assigned classrooms; parents can only view data for children explicitly tied to their account.
+* **Collision-Resilient Codes:** Alphanumeric codes use an unambiguous 30-character alphabet (excluding `0/O` and `1/I`) and are verified for uniqueness at the database level.
+* **Offline Idempotency:** Submissions carry a client-generated UUID; duplicate sync attempts during network reconnections are safely ignored without double-awarding XP.
+
+---
+
