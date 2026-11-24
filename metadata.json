@@ -1,0 +1,6 @@
+{
+  "name": "RuralConnect - Adaptive Learning Platform",
+  "description": "An offline-first rural teaching and learning platform that dynamically adapts its visual identity and learning experience between Primary (Grades 1-5) and Secondary (Grades 6-10) students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
