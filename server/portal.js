@@ -363,13 +363,8 @@ router.post('/parent/link', ...PARENT, ah(async (req, res) => {
   }
   res.json(await childrenOf(req.user));
 }));
-    if (!Array.isArray(req.user.childIds)) req.user.childIds = [];
-  if (!req.user.childIds.some((id) => S(id) === S(child._id))) {
-    req.user.childIds.push(child._id);
-    await req.user.save();
-  }
-  res.json(await childrenOf(req.user));
-}));
+    
+
 
 // the full report of one child
 router.get('/parent/children/:id/report', ...PARENT, ah(async (req, res) => {
