@@ -341,7 +341,8 @@ router.delete('/teacher/notices/:id', ...TEACHER, ah(async (req, res) => {
 const briefOf = (c) => ({ id: S(c._id), name: c.name, rollNo: c.rollNo, grade: c.grade, avatar: c.avatar });
 
 async function childrenOf(parent) {
-  const kids = await User.find({ _id: { $in: parent.childIds } }).sort({ name: 1 }).lean();
+  const ids = parent.childIds || [];
+  const kids = await User.find({ _id: { $in: ids } }).sort({ name: 1 }).lean();
   return kids.map(briefOf);
 }
 
@@ -355,6 +356,14 @@ router.post('/parent/link', ...PARENT, ah(async (req, res) => {
   const child = await findChild(rollNo, parentCode);
   if (!child) return res.status(404).json({ error: 'No student found with this Parent Code. Please verify the code.' });
 
+  if (!Array.isArray(req.user.childIds)) req.user.childIds = [];
+  if (!req.user.childIds.some((id) => S(id) === S(child._id))) {
+    req.user.childIds.push(child._id);
+    await req.user.save();
+  }
+  res.json(await childrenOf(req.user));
+}));
+    if (!Array.isArray(req.user.childIds)) req.user.childIds = [];
   if (!req.user.childIds.some((id) => S(id) === S(child._id))) {
     req.user.childIds.push(child._id);
     await req.user.save();

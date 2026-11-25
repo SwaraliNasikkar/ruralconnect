@@ -70,10 +70,10 @@ export async function uniqueCode(field) {
 }
 
 // Parent links to a child using the child's roll number + the child's parent code
+// Parent links to a child using unique parent code (or roll number + parent code)
 export function findChild(rollNo, parentCode) {
-  return User.findOne({
-    role: 'student',
-    rollNo: String(rollNo || '').toLowerCase().trim(),
-    parentCode: String(parentCode || '').toUpperCase().trim(),
-  });
+  const query = { role: 'student' };
+  if (parentCode) query.parentCode = String(parentCode).toUpperCase().trim();
+  if (rollNo) query.rollNo = String(rollNo).toLowerCase().trim();
+  return User.findOne(query);
 }
