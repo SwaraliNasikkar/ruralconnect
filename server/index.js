@@ -185,11 +185,4 @@ app.get('/api/progress', requireAuth, requireRole('student'), async (req, res) =
 // ---------- TEACHER / PARENT PORTAL ----------
 app.use('/api', portalRouter);
 
-// ---------- START ----------
-const PORT = process.env.PORT || 5000;
-connectDB()
-  .then(() => app.listen(PORT, () => console.log(`🚀 API running on http://localhost:${PORT}`)))
-  .catch((err) => {
-    console.error('❌ Could not start:', err.message);
-    process.exit(1);
-  });
+export default app;
